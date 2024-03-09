@@ -128,6 +128,29 @@ const displayBalance = function (movements) {
 };
 
 displayBalance(account1.movements);
+
+const calcDisplaySummary = function (movements) {
+  const incomes = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, cur) => acc + cur, 0);
+  labelSumIn.textContent = `${incomes} €`;
+
+  const out = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, cur) => acc + cur, 0);
+  labelSumOut.textContent = `${Math.abs(out)}  €`;
+
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * 1.2) / 100)
+    .filter((int, i, arr) => {
+      return int >= 1;
+    })
+
+    .reduce((acc, int) => acc + int, 0);
+  labelSumInterest.textContent = `${interest}  €`;
+};
+calcDisplaySummary(account1.movements);
 const deposits = movements.filter(mov => mov > 0);
 
 const balance = movements.reduce((acc, cur) => acc + cur, 0);
@@ -152,4 +175,113 @@ const calcAverageHumanAge = function (ages) {
 
 const agverage1 = calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]);
 const agverage2 = calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]);
-console.log(agverage1, agverage2);
+
+// Calculating the total price useing .forEach and .reduce method.
+const items = [
+  { name: 'Apple', price: 10 },
+  { name: 'Orange', price: 20 },
+  { name: 'Mango', price: 30 },
+];
+
+let totalPrice = 0;
+items.forEach(item => {
+  totalPrice += item.price;
+});
+
+const totalPrice1 = items.reduce((acc, item) => {
+  return acc + item.price;
+}, 0);
+//console.log(totalPrice1);
+
+// Removing duplicate using reduce.
+const items1 = [
+  { name: 'Apple', category: 'Fruit' },
+  { name: 'Onion', category: 'Vegetable' },
+  { name: 'Orange', category: 'Fruit' },
+  { name: 'Lettuce', category: 'Vegetable' },
+];
+const groupedItems = items1.reduce((acc, item) => {
+  const category = item.category;
+  if (!acc[category]) {
+    acc[category] = [];
+  }
+  acc[category].push(item.name);
+  return acc;
+}, {});
+//console.log(groupedItems);
+
+// Removing duplicate items.
+const itemArray = [1, 2, 3, 1, 2, 3, 7, 8, 7];
+
+const uniqueItems = itemArray.reduce((acc, item) => {
+  if (!acc.includes(item)) {
+    acc.push(item);
+  }
+  return acc;
+}, []);
+//console.log(uniqueItems);
+
+// Magic of chaining...
+
+const totalDepositsInUSD = movements
+  .filter(mov => mov > 0)
+  .map(mov => mov * euroToUsd)
+  .reduce((acc, cur) => acc + cur);
+//console.log(totalDepositsInUSD);
+
+let arr = [3, 4, 5, 6];
+for (let i = 0; i < arr.length; i++) {
+  arr[i] = arr[i] * 3;
+}
+
+const modifiedArr = arr.map(function (item) {
+  return item * 3;
+});
+// console.log(modifiedArr);
+let users = [
+  { firstName: 'Susan', lastName: 'Steward' },
+  { firstName: 'Daniel', lastName: 'Longbottom' },
+  { firstName: 'Jacob', lastName: 'Black' },
+];
+
+const fullName = users.map(function (name) {
+  return `${name.firstName} ${name.lastName}`;
+});
+//console.log(fullName);
+
+let arr1 = [2, 3, 5, 7];
+
+for (let item of arr1) {
+  item = item * 3;
+}
+let users1 = [
+  { name: 'John', age: 25, occupation: 'gardener' },
+  { name: 'Lenny', age: 51, occupation: 'programmer' },
+  { name: 'Andrew', age: 43, occupation: 'teacher' },
+  { name: 'Peter', age: 81, occupation: 'teacher' },
+  { name: 'Anna', age: 47, occupation: 'programmer' },
+  { name: 'Albert', age: 76, occupation: 'programmer' },
+];
+
+// let filteredUsers = [];
+// for (let i = 0; i < users1.length; i++) {
+//   if (users1[i].age > 40 && users1[i].occupation === 'programmer') {
+//     filteredUsers = [...filteredUsers, users1[i]];
+//   }
+// }
+// console.log(filteredUsers);
+
+const filteredUsers = users1
+  .filter(user => user.age > 40 && user.occupation === 'programmer')
+  .map(user => user.name);
+//console.log(filteredUsers);
+const userDetails = {
+  firstName: 'Jane',
+  lastName: 'Daniels',
+  userName: 'jane.daniels',
+  email: 'jane.daniels@example.com',
+  comapny: 'Example Inc.',
+  address: '1234 Example Street',
+  age: 25,
+  hobby: 'Singing',
+};
