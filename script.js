@@ -274,14 +274,7 @@ let users1 = [
 const filteredUsers = users1
   .filter(user => user.age > 40 && user.occupation === 'programmer')
   .map(user => user.name);
-//console.log(filteredUsers);
-const userDetails = {
-  firstName: 'Jane',
-  lastName: 'Daniels',
-  userName: 'jane.daniels',
-  email: 'jane.daniels@example.com',
-  comapny: 'Example Inc.',
-  address: '1234 Example Street',
-  age: 25,
-  hobby: 'Singing',
-};
+
+console.log(accounts);
+const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(account);
