@@ -61,9 +61,10 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = function (acc) {
+const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
-  acc.movements.forEach(function (mov, i) {
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `
       <div class="movements__row">
@@ -223,7 +224,12 @@ btnClose.addEventListener('click', function (e) {
     containerApp.style.opacity = 0;
   }
 });
-
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+});
 const deposits = movements.filter(mov => mov > 0);
 
 const balance = movements.reduce((acc, cur) => acc + cur, 0);
@@ -389,7 +395,79 @@ const allMovemnets = accountMovemnets.flat();
 
 //Chaining....
 const overallBalance = accounts
-  .map(acc => acc.movements)
-  .flat()
-  .reduce((acc, cur) => acc + cur, 0);
-console.log(overallBalance);
+  .flatMap(mov => mov.movements)
+  .reduce((acc, cur) => acc + cur);
+//console.log(overallBalance);
+const numbersArr = [3, 10, 4, 21, 5, 9, 2, 6, 5, 3, 5];
+numbersArr.sort((a, b) => a - b);
+//console.log('Ascending Order:', numbersArr);
+numbersArr.sort((a, b) => b - a);
+//console.log('Descending Order:', numbersArr);
+
+// Programmatically create array.
+const array4 = Array.from({ length: 10 }, (_, i) => i + 1);
+//console.log(array4);
+
+//1.   Calculate all the movment values in accounts object...
+const bankDepositSum = accounts
+  .flatMap(mov => mov.movements)
+  .filter(amount => amount > 0)
+  .reduce((sum, cur) => sum + cur, 0);
+//console.log(bankDepositSum);
+
+// 2. Count deposits which are greater than 1000
+const numDeposits1000 = accounts
+  .flatMap(mov => mov.movements)
+  .filter(amount => amount >= 1000).length;
+//console.log(numDeposits1000);
+
+//3.  Calculate deposits and withdrawls
+const sums1 = accounts
+  .flatMap(mov => mov.movements)
+  .reduce(
+    (sums1, cur) => {
+      cur > 0 ? (sums1.deposits += cur) : (sums1.withdrawals += cur);
+      return sums1;
+    },
+    { deposits: 0, withdrawals: 0 }
+  );
+//console.log(sums1);
+
+const { dep, withdrawals } = accounts
+  .flatMap(mov => mov.movements)
+  .reduce(
+    (sums, cur) => {
+      sums[cur > 0 ? 'dep' : 'withdrawals'] += cur;
+      return sums;
+    },
+    { dep: 0, withdrawals: 0 }
+  );
+//console.log(dep, withdrawals);
+
+// 4. Convert a string into title case.
+
+const convertTitleCase = function (title) {
+  const exceptions = [
+    'a',
+    'is',
+    'an',
+    'the',
+    'but',
+    'and',
+    'or',
+    'on',
+    'in',
+    'with',
+  ];
+  const titleCase = title
+    .toLowerCase()
+    .split(' ')
+    .map(word =>
+      exceptions.includes(word) ? word : word[0].toUpperCase() + word.slice(1)
+    )
+    .join(' ');
+  return titleCase;
+};
+console.log(convertTitleCase('this is the a nice title'));
+console.log(convertTitleCase('this is a long title but not too LONG'));
+console.log(convertTitleCase('here is another title with an EXAMPLE'));
